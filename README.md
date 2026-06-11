@@ -1,6 +1,6 @@
 # VT ImageMaker
 
-Java版のImageMakerとImageViewを統合したブラウザ版ツールです。
+VT本体付属のImageMakerとImageViewを統合したブラウザ版ツールです。
 
 ## 主な機能
 
