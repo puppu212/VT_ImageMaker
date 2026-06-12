@@ -3,7 +3,7 @@ import {
   deleteWorkspace,
   loadWorkspace,
   saveWorkspace,
-} from "./workspace-store.js?v=20260611-11";
+} from "./workspace-store.js?v=20260612-12";
 
 export class Autosave {
   constructor({ state, getSettings, onStatus, delay = 350 }) {

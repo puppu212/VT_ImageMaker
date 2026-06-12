@@ -5,6 +5,7 @@ import {
   detectOutputTarget,
   encodeBmp32,
   findConflictingImageFiles,
+  findDatFolderFileSets,
   findDatFolderFiles,
   packAssets,
   parseBmp32,
@@ -27,19 +28,29 @@ test("DAT filenames select the matching output target", () => {
   assert.equal(detectOutputTarget("IMAGE2.DAT", "IMAGEDATA2.DAT"), "2");
 });
 
-test("folder files are detected and image.dat is preferred", () => {
-  const detected = findDatFolderFiles([
+test("both DAT file sets are detected and can be selected", () => {
+  const files = [
     { name: "image2.dat" },
     { name: "imagedata2.dat" },
     { name: "image.dat" },
     { name: "imagedata.dat" },
     { name: "custom.txt" },
     { name: "voice.txt" },
+  ];
+  const sets = findDatFolderFileSets(files);
+  assert.deepEqual(sets.map(set => set.target), ["1", "2"]);
+  assert.equal(findDatFolderFiles(files, "1").imageFile.name, "image.dat");
+  assert.equal(findDatFolderFiles(files, "2").imageFile.name, "image2.dat");
+  assert.equal(sets[0].customFile.name, "custom.txt");
+  assert.equal(sets[1].voiceFile.name, "voice.txt");
+});
+
+test("a single DAT file set is selected automatically", () => {
+  const detected = findDatFolderFiles([
+    { name: "image2.dat" },
+    { name: "imagedata2.dat" },
   ]);
-  assert.equal(detected.imageFile.name, "image.dat");
-  assert.equal(detected.dataFile.name, "imagedata.dat");
-  assert.equal(detected.customFile.name, "custom.txt");
-  assert.equal(detected.voiceFile.name, "voice.txt");
+  assert.equal(detected.target, "2");
 });
 
 test("same-name image files are detected before overwrite", () => {

@@ -11,7 +11,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./styles.css?v=20260611-11">
+  <link rel="stylesheet" href="./styles.css?v=20260612-12">
 </head>
 <body>
   <header class="app-header">
@@ -196,6 +196,24 @@
     </form>
   </dialog>
 
+  <dialog id="dat-set-dialog">
+    <form method="dialog">
+      <h2>読み込むDATファイルを選択</h2>
+      <p>2種類のDATファイルが見つかりました。開く方を選択してください。</p>
+      <div class="dialog-choice-list">
+        <button id="choose-dat-1" type="button" class="button wide">
+          image.dat / imagedata.dat
+        </button>
+        <button id="choose-dat-2" type="button" class="button wide">
+          image2.dat / imagedata2.dat
+        </button>
+      </div>
+      <div class="dialog-actions">
+        <button id="cancel-dat-choice" type="button" class="button subtle">キャンセル</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="install-dialog">
     <form method="dialog">
       <h2>アプリとして追加</h2>
@@ -206,7 +224,7 @@
     </form>
   </dialog>
 
-  <script type="module" src="./src/app.js?v=20260611-11"></script>
-  <script type="module" src="./src/pwa.js?v=20260611-11"></script>
+  <script type="module" src="./src/app.js?v=20260612-12"></script>
+  <script type="module" src="./src/pwa.js?v=20260612-12"></script>
 </body>
 </html>

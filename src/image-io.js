@@ -1,7 +1,7 @@
 import {
   makeBmpBlackTransparent,
   parseBmp32,
-} from "./formats.js?v=20260611-11";
+} from "./formats.js?v=20260612-12";
 
 export async function decodeImageFile(file) {
   const bytes = new Uint8Array(await file.arrayBuffer());

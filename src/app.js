@@ -3,31 +3,36 @@ import {
   encodeBmp32,
   extractAssets,
   findConflictingImageFiles,
+  findDatFolderFileSets,
   findDatFolderFiles,
   packAssets,
   parseBmp32,
   parseImageData,
   serializeImageData,
-} from "./formats.js?v=20260611-11";
-import { Autosave } from "./autosave.js?v=20260611-11";
-import { askConfirmation, askRestoreAction } from "./dialogs.js?v=20260611-11";
-import { History } from "./history.js?v=20260611-11";
+} from "./formats.js?v=20260612-12";
+import { Autosave } from "./autosave.js?v=20260612-12";
+import {
+  askConfirmation,
+  askDatSetChoice,
+  askRestoreAction,
+} from "./dialogs.js?v=20260612-12";
+import { History } from "./history.js?v=20260612-12";
 import {
   decodeImageFile,
   download,
   drawPixels,
   renderTextAsset,
-} from "./image-io.js?v=20260611-11";
+} from "./image-io.js?v=20260612-12";
 import {
   decodeShiftJis,
   getTextAssetStyle,
   parseCustomText,
   parseVoiceText,
-} from "./text-assets.js?v=20260611-11";
+} from "./text-assets.js?v=20260612-12";
 import {
   createWorkspaceRecord,
   restoreWorkspaceRecord,
-} from "./workspace-store.js?v=20260611-11";
+} from "./workspace-store.js?v=20260612-12";
 
 const state = {
   assets: new Map(),
@@ -48,6 +53,7 @@ const ui = Object.fromEntries([
   "custom-text-file", "voice-text-file", "dat-folder", "save-status",
   "restore-dialog", "restore-summary", "restore-workspace", "discard-workspace",
   "confirm-dialog", "confirm-title", "confirm-message", "confirm-cancel", "confirm-accept",
+  "dat-set-dialog", "choose-dat-1", "choose-dat-2", "cancel-dat-choice",
   "undo-action", "redo-action",
 ].map(id => [id.replaceAll("-", "_"), document.getElementById(id)]));
 
@@ -191,7 +197,11 @@ async function loadDatPair() {
 
 async function loadDatFolder(event) {
   try {
-    await loadDatFiles(findDatFolderFiles(event.target.files ?? []));
+    const files = event.target.files ?? [];
+    const sets = findDatFolderFileSets(files);
+    const target = sets.length > 1 ? await askDatSetChoice(ui) : sets[0].target;
+    if (!target) return;
+    await loadDatFiles(findDatFolderFiles(files, target));
   } catch (error) {
     setStatus(`DAT読込エラー: ${error.message}`, true);
   } finally {

@@ -1,7 +1,7 @@
 import {
   detectInstallMode,
   installInstructions,
-} from "./pwa-install.js?v=20260611-11";
+} from "./pwa-install.js?v=20260612-12";
 
 let installPrompt = null;
 let refreshing = false;

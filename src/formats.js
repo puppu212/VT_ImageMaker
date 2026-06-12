@@ -6,31 +6,38 @@ export function detectOutputTarget(imageName, dataName) {
   return image === "image2.dat" && data === "imagedata2.dat" ? "2" : "1";
 }
 
-export function findDatFolderFiles(files) {
+export function findDatFolderFileSets(files) {
   const byName = new Map(
     [...files].map(file => [file.name.toLowerCase(), file])
   );
-  const firstPair = {
-    imageFile: byName.get("image.dat"),
-    dataFile: byName.get("imagedata.dat"),
-  };
-  const secondPair = {
-    imageFile: byName.get("image2.dat"),
-    dataFile: byName.get("imagedata2.dat"),
-  };
-  const pair = firstPair.imageFile && firstPair.dataFile
-    ? firstPair
-    : secondPair.imageFile && secondPair.dataFile
-      ? secondPair
-      : null;
-  if (!pair) {
-    throw new Error("対応する2つのDATファイルが見つかりません");
-  }
-  return {
-    ...pair,
+  const commonFiles = {
     customFile: byName.get("custom.txt") ?? null,
     voiceFile: byName.get("voice.txt") ?? null,
   };
+  const sets = [
+    {
+      target: "1",
+      imageFile: byName.get("image.dat"),
+      dataFile: byName.get("imagedata.dat"),
+      ...commonFiles,
+    },
+    {
+      target: "2",
+      imageFile: byName.get("image2.dat"),
+      dataFile: byName.get("imagedata2.dat"),
+      ...commonFiles,
+    },
+  ].filter(set => set.imageFile && set.dataFile);
+
+  if (!sets.length) {
+    throw new Error("対応する2つのDATファイルが見つかりません");
+  }
+  return sets;
+}
+
+export function findDatFolderFiles(files, target = null) {
+  const sets = findDatFolderFileSets(files);
+  return sets.find(set => set.target === target) ?? sets[0];
 }
 
 export function findConflictingImageFiles(files, existingNames) {

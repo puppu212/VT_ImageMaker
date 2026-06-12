@@ -36,6 +36,23 @@ export function askRestoreAction(ui, record) {
   });
 }
 
+export function askDatSetChoice(ui) {
+  ui.dat_set_dialog.showModal();
+  return new Promise(resolve => {
+    const finish = value => {
+      ui.dat_set_dialog.close();
+      resolve(value);
+    };
+    ui.choose_dat_1.onclick = () => finish("1");
+    ui.choose_dat_2.onclick = () => finish("2");
+    ui.cancel_dat_choice.onclick = () => finish(null);
+    ui.dat_set_dialog.oncancel = event => {
+      event.preventDefault();
+      finish(null);
+    };
+  });
+}
+
 function formatDateTime(timestamp) {
   if (!Number.isFinite(timestamp)) return "日時不明";
   return new Intl.DateTimeFormat("ja-JP", {
